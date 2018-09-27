@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">TrendingNews</string>
+
+    <string name="str_newsstand_menu">Newsstand</string>
+    <string name="str_favorites_menu">Favorites</string>
+    <string name="str_comments_menu">Comments</string>
+
+    <string name="str_abc_news">ABC News</string>
+    <string name="str_bbc_news">BBC News</string>
+    <string name="str_cnn">CNN</string>
+    <string name="str_cnbc">CNBC</string>
+    <string name="str_fox_news">FOX News</string>
+    <string name="str_the_washington_times">The Washington Times</string>
+    <string name="str_the_wall_street_journal">The Wall Street Journal</string>
+    <string name="str_usa_today">USA Today</string>
+    <string name="str_engadget">Engadget</string>
+    <string name="str_entertainment_weekly">Entertainment Weekly</string>
+    <string name="str_espn">ESPN</string>
+    <string name="str_financial_times">Financial Times</string>
+    <string name="str_business_insider">Business Insider</string>
+    <string name="str_national_geographic">National Geographic</string>
+
+    <string name="str_settings_menu">Settings</string>
+    <string name="str_signout_menu">SignOut</string>
+</resources>

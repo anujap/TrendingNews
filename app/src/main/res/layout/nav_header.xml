@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="192dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.anuja.trendingnews.app.activities.MainActivity"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="?attr/colorPrimaryDark"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:elevation="12dp"
+        app:cardCornerRadius="40dp"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:id="@+id/img_user_photo"
+            android:src="@drawable/ic_temp_photo"/>
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:paddingTop="5dp"
+        android:id="@+id/tv_user_name"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="My Name Here"/>
+
+</LinearLayout>

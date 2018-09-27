@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/str_newsstand_menu"
+        android:icon="@drawable/ic_newsstand">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:title="@string/str_abc_news"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_abc_news" />
+
+                <item android:title="@string/str_bbc_news"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_bbc_news" />
+
+                <item android:title="@string/str_cnn"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_cnn" />
+
+                <item android:title="@string/str_cnbc"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_cnbc" />
+
+                <item android:title="@string/str_fox_news"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_fox_news" />
+
+                <item android:title="@string/str_the_washington_times"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_the_washington_times" />
+
+                <item android:title="@string/str_the_wall_street_journal"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_the_wall_street_journal" />
+
+                <item android:title="@string/str_usa_today"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_usa_today" />
+
+                <item android:title="@string/str_engadget"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_engadget" />
+
+                <item android:title="@string/str_entertainment_weekly"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_entertainment_weekly" />
+
+                <item android:title="@string/str_espn"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_espn" />
+
+                <item android:title="@string/str_financial_times"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_financial_times" />
+
+                <item android:title="@string/str_business_insider"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_business_insider" />
+
+                <item android:title="@string/str_national_geographic"
+                    android:icon="@drawable/ic_bookmark"
+                    android:id="@+id/menu_national_geographic" />
+            </group>
+        </menu>
+    </item>
+
+    <group android:checkableBehavior="none">
+        <item android:title="@string/str_favorites_menu"
+            android:id="@+id/menu_favorites"
+            android:icon="@drawable/ic_favorites"/>
+    </group>
+
+    <group android:checkableBehavior="none">
+        <item android:title="@string/str_comments_menu"
+            android:id="@+id/menu_comments"
+            android:icon="@drawable/ic_comments"/>
+    </group>
+</menu>
