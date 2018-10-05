@@ -7,6 +7,14 @@
     <string name="str_favorites_menu">Favorites</string>
     <string name="str_comments_menu">Comments</string>
 
+    <string name="str_business">Business</string>
+    <string name="str_entertainment">Entertainment</string>
+    <string name="str_general">General</string>
+    <string name="str_health">Health</string>
+    <string name="str_science">Science</string>
+    <string name="str_sports">Sports</string>
+    <string name="str_technology">Technology</string>
+
     <string name="str_abc_news">ABC News</string>
     <string name="str_bbc_news">BBC News</string>
     <string name="str_cnn">CNN</string>
@@ -32,4 +40,5 @@
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
 
     <string name="str_news_image_thumbnail">News Thumbnail Image</string>
+    <string name="str_news_category">News Category</string>
 </resources>

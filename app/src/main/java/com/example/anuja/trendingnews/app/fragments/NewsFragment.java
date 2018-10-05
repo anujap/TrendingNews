@@ -1,6 +1,5 @@
 package com.example.anuja.trendingnews.app.fragments;
 
-import android.app.LauncherActivity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +17,7 @@ import com.example.anuja.trendingnews.app.adapters.NewsAdapter;
 import com.example.anuja.trendingnews.model.Articles;
 import com.example.anuja.trendingnews.viewmodel.MainViewModel;
 
-public class AllNewsFragment extends Fragment implements NewsAdapter.ListItemClickListener {
+public class NewsFragment extends Fragment implements NewsAdapter.ListItemClickListener {
 
     private MainViewModel mainViewModel;
     private RecyclerView mRecyclerView;
@@ -27,9 +26,11 @@ public class AllNewsFragment extends Fragment implements NewsAdapter.ListItemCli
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         // get the viewmodel
         mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+
         retrieveAllNews(); // should be called in the onConnected method
     }
 

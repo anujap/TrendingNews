@@ -11,4 +11,6 @@ public class NewsUtils {
     public static final String ENDPOINT_NEWS_TOP_HEADLINES = "top-headlines";
     public static final String COUNTRY_PARAM = "country";
     public static final String COUNTRY_PARAM_VALUE = "us";
+
+    public static final String CATEGORY_PARAM = "category";
 }

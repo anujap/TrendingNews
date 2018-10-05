@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_image_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/hardware/ic_laptop_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,7 +33,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_news_thumbnail_placeholder" />
+                                      <entry key="outputName" value="ic_tech_category" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="2196f3" />
                                     </map>
@@ -71,7 +71,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_menu_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_business_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -82,8 +82,11 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_menu" />
+                            <entry key="height" value="80" />
+                            <entry key="outputName" value="ic_business_va" />
+                            <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\Anuja" />
+                            <entry key="width" value="80" />
                           </map>
                         </option>
                       </PersistentState>

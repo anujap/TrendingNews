@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.anuja.trendingnews.R;
-import com.example.anuja.trendingnews.app.fragments.AllNewsFragment;
+import com.example.anuja.trendingnews.app.fragments.NewsFragment;
 import com.example.anuja.trendingnews.app.fragments.CategoriesFragment;
 import com.example.anuja.trendingnews.app.fragments.CommentsFragment;
 import com.example.anuja.trendingnews.app.fragments.FavoritesFragment;
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new CategoriesFragment();
                 break;
             case R.id.menu_all_news:
-                fragment = new AllNewsFragment();
+                fragment = new NewsFragment();
                 break;
             case R.id.menu_favorites:
                 fragment = new FavoritesFragment();

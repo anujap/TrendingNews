@@ -27,4 +27,9 @@ public interface NewsWebserviceInterface {
                             @Query(NewsUtils.COUNTRY_PARAM) String country,
                             @Query(NewsUtils.API_KEY_PARAM) String apiKey);
 
+    @GET(NewsUtils.NEWS_URL_VERSION + "{endpoint}")
+    Call<NewsModel> getNewsByCategory(@Path(NewsUtils.ENDPOINT_PARAM) String endpoint,
+                                      @Query(NewsUtils.COUNTRY_PARAM) String country,
+                                      @Query(NewsUtils.CATEGORY_PARAM) String category,
+                                      @Query(NewsUtils.API_KEY_PARAM) String apiKey);
 }
