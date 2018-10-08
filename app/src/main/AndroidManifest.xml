@@ -18,13 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".app.activities.CategoryListActivity"
+        <activity
+            android:name=".app.activities.CategoryListActivity"
             android:parentActivityName=".app.activities.MainActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".app.activities.MainActivity" />
         </activity>
+        <activity android:name=".app.activities.NewsDetailsActivity"></activity>
     </application>
 
 </manifest>

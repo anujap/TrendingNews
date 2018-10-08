@@ -1,6 +1,7 @@
 package com.example.anuja.trendingnews.app.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,11 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.anuja.trendingnews.R;
+import com.example.anuja.trendingnews.app.activities.NewsDetailsActivity;
 import com.example.anuja.trendingnews.app.adapters.NewsAdapter;
 import com.example.anuja.trendingnews.model.Articles;
 import com.example.anuja.trendingnews.viewmodel.MainViewModel;
 
 public class NewsFragment extends Fragment implements NewsAdapter.ListItemClickListener {
+
+    public static final String KEY_ARTICLE = "article_key";
 
     private MainViewModel mainViewModel;
     private RecyclerView mRecyclerView;
@@ -62,6 +66,8 @@ public class NewsFragment extends Fragment implements NewsAdapter.ListItemClickL
 
     @Override
     public void onListItemClicked(Articles article) {
-
+        Intent intent = new Intent(getActivity(), NewsDetailsActivity.class);
+        intent.putExtra(KEY_ARTICLE, article);
+        startActivity(intent);
     }
 }

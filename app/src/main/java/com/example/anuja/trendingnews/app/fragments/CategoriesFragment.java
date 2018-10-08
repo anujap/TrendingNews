@@ -56,7 +56,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
      */
     private void createCategoryList() {
 
-        mCategoriesImgList.add(R.drawable.ic_business_va);
+        mCategoriesImgList.add(R.drawable.ic_business_category);
         mCategoriesImgList.add(R.drawable.ic_entertainment_category);
         mCategoriesImgList.add(R.drawable.ic_general_category);
         mCategoriesImgList.add(R.drawable.ic_health_category);

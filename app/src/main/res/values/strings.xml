@@ -41,4 +41,10 @@
 
     <string name="str_news_image_thumbnail">News Thumbnail Image</string>
     <string name="str_news_category">News Category</string>
+
+    <string name="str_description">Description: </string>
+    <string name="str_author">Author: </string>
+    <string name="str_published_at">Published At: </string>
+    <string name="str_content">Content: </string>
+    <string name="str_url">URL: </string>
 </resources>
