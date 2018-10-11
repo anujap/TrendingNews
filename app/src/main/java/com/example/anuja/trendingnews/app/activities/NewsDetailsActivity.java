@@ -221,9 +221,11 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.fab_share:
                 shareNews();
+                animateFAB();
                 break;
             case R.id.fab_launch:
                 launchURI();
+                animateFAB();
                 break;
             case R.id.fab_favorite:
                 break;

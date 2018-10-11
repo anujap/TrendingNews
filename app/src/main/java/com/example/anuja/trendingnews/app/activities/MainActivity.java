@@ -1,6 +1,7 @@
 package com.example.anuja.trendingnews.app.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +31,7 @@ import com.example.anuja.trendingnews.app.fragments.NewsFragment;
 import com.example.anuja.trendingnews.app.fragments.CategoriesFragment;
 import com.example.anuja.trendingnews.app.fragments.CommentsFragment;
 import com.example.anuja.trendingnews.app.fragments.FavoritesFragment;
+import com.example.anuja.trendingnews.model.MainModel;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,10 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int RC_SIGN_IN = 1; // request code
     private static final String ANONYMOUS = "Anonymous";
+    private static final String KEY_MODEL_POSITION = "model_position";
+    private static final String KEY_MODEL_POSITION_TITLE = "model_position_title";
 
     // firebase
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private FirebaseUser mFirebaseUser = null;
     private String username;
     private Uri userPhotoUri;
     private ImageView ivUserDisplayPhoto;
@@ -57,24 +63,45 @@ public class MainActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
     // navigation
+    private ActionBarDrawerToggle toggle;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private TextView tvNavigationHeaderUserName;
 
-    Fragment fragment = null;
+    private Fragment fragment = null;
+    private MainModel mainModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initializeModel(savedInstanceState);
         initiateFirebaseAuthentication();
+    }
+
+    private void initializeModel(Bundle savedInstanceState) {
+        mainModel = new MainModel();
+
+        if(savedInstanceState != null) {
+            mainModel.setSelectedPosition(savedInstanceState.getInt(KEY_MODEL_POSITION));
+            mainModel.setSelectedPositionTitle(savedInstanceState.getString(KEY_MODEL_POSITION_TITLE));
+        }
+        else {
+            mainModel.setSelectedPosition(R.id.menu_categories);
+            mainModel.setSelectedPositionTitle(getResources().getString(R.string.str_categories));
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+
+        if(mFirebaseUser != null) {
+            displaySelectedFragment();
+        }
+
     }
 
     @Override
@@ -93,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser mFirebaseUser = firebaseAuth.getCurrentUser();
+                mFirebaseUser = firebaseAuth.getCurrentUser();
                 if (mFirebaseUser != null) {
                     // user is signed in
                     onSignedIn(mFirebaseUser.getDisplayName(), mFirebaseUser.getPhotoUrl());
@@ -144,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
         setUsernameDetails();
         performDrawerToggle();
 
-        mNavigationView.setCheckedItem(R.id.menu_categories);
-        displaySelectedFragment(R.id.menu_categories);
+        mNavigationView.setCheckedItem(mainModel.getSelectedPosition());
+        displaySelectedFragment();
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -153,17 +180,23 @@ public class MainActivity extends AppCompatActivity {
                 menuItem.setChecked(true);
                 mDrawerLayout.closeDrawers();
 
-                displaySelectedFragment(menuItem.getItemId());
+                mainModel.setSelectedPosition(menuItem.getItemId());
+                mainModel.setSelectedPositionTitle(menuItem.getTitle().toString());
+                displaySelectedFragment();
                 // swap fragments here
-                setTitle(menuItem.getTitle());
+
                 return true;
             }
         });
     }
 
     private void setUsernameDetails() {
-        tvNavigationHeaderUserName.setText(username);
-        uriToBitmap(userPhotoUri);
+        if(!TextUtils.isEmpty(username)) {
+            tvNavigationHeaderUserName.setText(username);
+        }
+
+        if(userPhotoUri != null)
+            uriToBitmap(userPhotoUri);
     }
 
     /**
@@ -188,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
      * function used to perform the actionbar drawer toggle
      */
     private void performDrawerToggle() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
+        toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -198,8 +231,10 @@ public class MainActivity extends AppCompatActivity {
      * function called to display the fragment based on the menu
      * item selected from the navigation drawer
      */
-    private void displaySelectedFragment(int menuItemId) {
+    private void displaySelectedFragment() {
+        setTitle(mainModel.getSelectedPositionTitle());
 
+        int menuItemId = mainModel.getSelectedPosition();
         switch(menuItemId) {
             case R.id.menu_categories:
                 fragment = new CategoriesFragment();
@@ -269,5 +304,20 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        toggle.syncState();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(KEY_MODEL_POSITION, mainModel.getSelectedPosition());
+        outState.putString(KEY_MODEL_POSITION_TITLE, mainModel.getSelectedPositionTitle());
     }
 }

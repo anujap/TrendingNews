@@ -59,7 +59,6 @@ public class NewsFragment extends Fragment implements NewsAdapter.ListItemClickL
     private void retrieveAllNews() {
         mainViewModel.displayAllNews();
         mainViewModel.getAllNewsList().observe(this, allNews -> {
-            Log.i("Test", "allNews is: " + allNews);
             mNewsAdapter.swapLists(allNews);
         });
     }
