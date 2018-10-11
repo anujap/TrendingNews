@@ -94,12 +94,14 @@ public class Articles extends BaseObservable implements Parcelable {
         notifyPropertyChanged(BR.url);
     }
 
+    @Bindable
     public String getUrlToImage() {
         return urlToImage;
     }
 
     public void setUrlToImage(String urlToImage) {
         this.urlToImage = urlToImage;
+        notifyPropertyChanged(BR.urlToImage);
     }
 
     @Bindable
