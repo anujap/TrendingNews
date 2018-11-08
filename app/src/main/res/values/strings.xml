@@ -37,4 +37,9 @@
 
     <string name="str_url_unavailable">URL is unavailable</string>
     <string name="str_send_to">Send To</string>
+
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="str_next">Next</string>
+    <string name="str_previous">Previous</string>
 </resources>

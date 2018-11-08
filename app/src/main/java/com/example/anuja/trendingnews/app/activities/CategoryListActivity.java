@@ -42,7 +42,7 @@ public class CategoryListActivity extends AppCompatActivity implements NewsAdapt
      * Function called to handle the action bar
      */
     private void setUpActionBar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar_cat);
+        Toolbar mToolbar = findViewById(R.id.toolbar_cat);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = this.getSupportActionBar();
         if(actionBar != null) {
@@ -66,7 +66,7 @@ public class CategoryListActivity extends AppCompatActivity implements NewsAdapt
      * Function called to setup recycler view and its adapter
      */
     private void setUpRecyclerView() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_cat_news);
+        mRecyclerView = findViewById(R.id.rv_cat_news);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mNewsAdapter = new NewsAdapter(null, this);
         mRecyclerView.setAdapter(mNewsAdapter);

@@ -3,6 +3,7 @@
     package="com.example.anuja.trendingnews">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -25,7 +26,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".app.activities.MainActivity" />
         </activity>
-        <activity android:name=".app.activities.NewsDetailsActivity"></activity>
+        <activity android:name=".app.activities.NewsDetailsActivity" />
+
+        <receiver android:name=".TrendingNewsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/trending_news_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".WidgetService" />
+
+        <service
+            android:name=".ArticlesListViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"></service>
     </application>
 
 </manifest>

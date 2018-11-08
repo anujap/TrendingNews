@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -88,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
             mainModel.setSelectedPositionTitle(savedInstanceState.getString(KEY_MODEL_POSITION_TITLE));
         }
         else {
-            mainModel.setSelectedPosition(R.id.menu_categories);
-            mainModel.setSelectedPositionTitle(getResources().getString(R.string.str_categories));
+            mainModel.setSelectedPosition(R.id.menu_all_news);
+            mainModel.setSelectedPositionTitle(getResources().getString(R.string.str_all_news));
         }
     }
 
@@ -163,10 +164,10 @@ public class MainActivity extends AppCompatActivity {
      * function used to create navigation drawer
      */
     private void initializeNavigationDrawer() {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        tvNavigationHeaderUserName = (TextView) findViewById(R.id.tv_user_name);
-        ivUserDisplayPhoto = (ImageView) findViewById(R.id.img_user_photo);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mNavigationView = findViewById(R.id.nav_view);
+        tvNavigationHeaderUserName = findViewById(R.id.tv_user_name);
+        ivUserDisplayPhoto = findViewById(R.id.img_user_photo);
 
         setUsernameDetails();
         performDrawerToggle();
@@ -263,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
      * function to initialize the toolbar
      */
     private void initializeToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);

@@ -45,7 +45,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_categories);
+        mRecyclerView = view.findViewById(R.id.rv_categories);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
         mCategoriesAdapter = new CategoriesAdapter(mCategoriesImgList, mCategoriesList, this);
         mRecyclerView.setAdapter(mCategoriesAdapter);
