@@ -46,6 +46,10 @@ public class Articles extends BaseObservable implements Parcelable {
     @Expose
     private String content;
 
+    private String articleId;
+
+    private String isFav;
+
     public Source getSource() {
         return source;
     }
@@ -124,6 +128,22 @@ public class Articles extends BaseObservable implements Parcelable {
         notifyPropertyChanged(BR.content);
     }
 
+    public String getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
+    }
+
+    public String getIsFav() {
+        return isFav;
+    }
+
+    public void setIsFav(String isFav) {
+        this.isFav = isFav;
+    }
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         //parcel.writeO(this.sourceArrayList);
@@ -134,6 +154,8 @@ public class Articles extends BaseObservable implements Parcelable {
         parcel.writeString(this.urlToImage);
         parcel.writeString(this.publishedAt);
         parcel.writeString(this.content);
+        parcel.writeString(this.articleId);
+        parcel.writeString(this.isFav);
     }
 
     private Articles(Parcel in) {
@@ -144,6 +166,8 @@ public class Articles extends BaseObservable implements Parcelable {
         this.urlToImage = in.readString();
         this.publishedAt = in.readString();
         this.content = in.readString();
+        this.articleId = in.readString();
+        this.isFav = in.readString();
     }
 
     /**

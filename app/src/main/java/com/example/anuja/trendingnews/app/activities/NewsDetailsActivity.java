@@ -4,23 +4,37 @@ import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.anuja.trendingnews.BR;
 import com.example.anuja.trendingnews.R;
 import com.example.anuja.trendingnews.app.fragments.NewsFragment;
 import com.example.anuja.trendingnews.databinding.ActivityNewsDetailsBinding;
 import com.example.anuja.trendingnews.model.Articles;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -35,6 +49,7 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
     private static final int ALPHA_ANIMATIONS_DURATION              = 200;
+    private static final String DB_REFERENCE_CHILD_NAME = "TrendingNews";
 
     private boolean mIsTheTitleVisible = false;
     private boolean mIsTheTitleContainerVisible = true;
@@ -45,6 +60,9 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
     // snackbar
     private Snackbar snackbar;
 
+    private boolean isFavorite = false;
+
+    //private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +190,8 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
         mBinding.fabLaunch.setOnClickListener(this);
         mBinding.fabShare.setOnClickListener(this);
         mBinding.fabComment.setOnClickListener(this);
+
+        retrieveNewsFavorite();
     }
 
     /**
@@ -228,8 +248,71 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
                 animateFAB();
                 break;
             case R.id.fab_favorite:
+                toggleFabFavorites();
                 break;
         }
+    }
+
+    /**
+     * function called to like/unlike news
+     */
+    private void toggleFabFavorites() {
+        updateNewsToDatabase();
+    }
+
+    private void toggleFavUI() {
+        Log.i("Test", "isFavorite in toggle: " + isFavorite);
+        if(isFavorite) {
+            Log.i("Test", "isFavorite in toggle true: " + isFavorite);
+            mBinding.fabFavorite.setImageDrawable(getDrawable(R.drawable.ic_fav_selected));
+        }
+        else {
+            Log.i("Test", "isFavorite in toggle false: " + isFavorite);
+            mBinding.fabFavorite.setImageDrawable(getDrawable(R.drawable.ic_fav_unselected));
+        }
+
+    }
+
+    private void retrieveNewsFavorite() {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
+        DatabaseReference dbRefKey = dbRef.child(mArticle.getArticleId());
+        DatabaseReference dbRefChild = dbRefKey.child("isFav");
+        dbRefChild.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                isFavorite = Boolean.valueOf(dataSnapshot.getValue(String.class));
+                Log.i("Test", "%%%%%%%%%%: " + isFavorite);
+                toggleFavUI();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * function called to update the liked news to the database
+     */
+    private void updateNewsToDatabase() {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME).child(mArticle.getArticleId());
+        Log.i("Test", "isFavorite before updating: " + isFavorite);
+        if(isFavorite) {
+            isFavorite = false;
+            mArticle.setIsFav("false");
+            Toast.makeText(this, "News DisLiked", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            isFavorite = true;
+            mArticle.setIsFav("true");
+            Toast.makeText(this, "News Liked", Toast.LENGTH_SHORT).show();
+        }
+        dbRef.setValue(mArticle);
+        toggleFavUI();
+
+        Log.i("Test", "isFavorite after updating: " + isFavorite);
     }
 
     /**

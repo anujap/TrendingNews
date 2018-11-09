@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,6 @@ public class NewsFragment extends Fragment implements NewsAdapter.ListItemClickL
         mainViewModel.displayAllNews();
         mainViewModel.getAllNewsList().observe(this, allNews -> {
             mNewsAdapter.swapLists(allNews);
-
             WidgetService.startActionToUpdateNews(getContext(), allNews);
         });
     }
