@@ -50,6 +50,8 @@ public class Articles extends BaseObservable implements Parcelable {
 
     private String isFav;
 
+    public Articles() {}
+
     public Source getSource() {
         return source;
     }

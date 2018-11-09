@@ -19,6 +19,8 @@ public class Source implements Parcelable {
     @Expose
     private String name;
 
+    public Source() {}
+
     public String getId() {
         return id;
     }

@@ -14,8 +14,12 @@ import com.example.anuja.trendingnews.webservice.NewsUtils;
 import com.example.anuja.trendingnews.webservice.NewsWebserviceInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,7 @@ public class MainViewModel extends ViewModel {
 
     private MutableLiveData<List<Articles>> allNewsList;
     private MutableLiveData<List<Articles>> newsByCategoryList;
+    private MutableLiveData<List<Articles>> allFavNews;
 
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
 
@@ -45,6 +50,12 @@ public class MainViewModel extends ViewModel {
         if(allNewsList == null)
             allNewsList = new MutableLiveData<>();
         return allNewsList;
+    }
+
+    public MutableLiveData<List<Articles>> getAllFavNews() {
+        if(allFavNews == null)
+            allFavNews = new MutableLiveData<>();
+        return allFavNews;
     }
 
     public MutableLiveData<List<Articles>> getNewsByCategoryList() {
@@ -89,6 +100,27 @@ public class MainViewModel extends ViewModel {
             }
         }
         return storedNewsArticlesList;
+    }
+
+    public void retrieveFavNews() {
+        ArrayList<Articles> retrievedList = new ArrayList<>();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot articleSnapshot : dataSnapshot.getChildren()) {
+                    Articles article = articleSnapshot.getValue(Articles.class);
+                    Log.i("Test", "***********article: " + article);
+                    retrievedList.add(article);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     /**

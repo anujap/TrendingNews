@@ -261,16 +261,10 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void toggleFavUI() {
-        Log.i("Test", "isFavorite in toggle: " + isFavorite);
-        if(isFavorite) {
-            Log.i("Test", "isFavorite in toggle true: " + isFavorite);
+        if(isFavorite)
             mBinding.fabFavorite.setImageDrawable(getDrawable(R.drawable.ic_fav_selected));
-        }
-        else {
-            Log.i("Test", "isFavorite in toggle false: " + isFavorite);
+        else
             mBinding.fabFavorite.setImageDrawable(getDrawable(R.drawable.ic_fav_unselected));
-        }
-
     }
 
     private void retrieveNewsFavorite() {
@@ -282,7 +276,6 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 isFavorite = Boolean.valueOf(dataSnapshot.getValue(String.class));
-                Log.i("Test", "%%%%%%%%%%: " + isFavorite);
                 toggleFavUI();
             }
 
@@ -298,7 +291,6 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
      */
     private void updateNewsToDatabase() {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME).child(mArticle.getArticleId());
-        Log.i("Test", "isFavorite before updating: " + isFavorite);
         if(isFavorite) {
             isFavorite = false;
             mArticle.setIsFav("false");
@@ -311,8 +303,6 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
         }
         dbRef.setValue(mArticle);
         toggleFavUI();
-
-        Log.i("Test", "isFavorite after updating: " + isFavorite);
     }
 
     /**
