@@ -110,8 +110,8 @@ public class MainViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot articleSnapshot : dataSnapshot.getChildren()) {
                     Articles article = articleSnapshot.getValue(Articles.class);
-                    Log.i("Test", "***********article: " + article);
-                    retrievedList.add(article);
+                    if(article.getIsFav().equals("true"))
+                        retrievedList.add(article);
                 }
             }
 
