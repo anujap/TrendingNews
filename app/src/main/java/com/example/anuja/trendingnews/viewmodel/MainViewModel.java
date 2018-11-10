@@ -32,15 +32,14 @@ import retrofit2.Response;
  * The Main View Model class
  */
 public class MainViewModel extends ViewModel {
-
-    private static final String TAG = "MainViewModel";
     private static final String DB_REFERENCE_CHILD_NAME = "TrendingNews";
 
     private NewsWebserviceInterface mWebserviceInterface = NewsRetrofitClient.getInstance().getNewsWebservice();
 
     private MutableLiveData<List<Articles>> allNewsList;
-    private MutableLiveData<List<Articles>> newsByCategoryList;
     private MutableLiveData<List<Articles>> allFavNews;
+
+    private MutableLiveData<List<Articles>> localNews;
 
     private DatabaseReference databaseReference;
 
@@ -58,10 +57,15 @@ public class MainViewModel extends ViewModel {
         return allFavNews;
     }
 
-    public MutableLiveData<List<Articles>> getNewsByCategoryList() {
-        if(newsByCategoryList == null)
-            newsByCategoryList = new MutableLiveData<>();
-        return newsByCategoryList;
+    public MutableLiveData<List<Articles>> getNewsLocallyList() {
+        if(localNews == null)
+            localNews = new MutableLiveData<>();
+        return localNews;
+    }
+
+    public void initializingFirbase() {
+        databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
+        databaseReference.keepSynced(true);
     }
 
     /**
@@ -90,8 +94,6 @@ public class MainViewModel extends ViewModel {
      * function called to insert the data into the database
      */
     private ArrayList<Articles> insertAndRetrieveFromDatabase(List<Articles> newsArticlesList) {
-        databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
-        databaseReference.keepSynced(true);
         for (Articles article : newsArticlesList) {
             String id = databaseReference.push().getKey();
             article.setArticleId(id);
@@ -104,25 +106,50 @@ public class MainViewModel extends ViewModel {
         return storedNewsArticlesList;
     }
 
-    public void retrieveFavNews() {
-
+    // change the list
+    public void retrieveLocally() {
         ArrayList<Articles> retrievedList = new ArrayList<>();
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot articleSnapshot : dataSnapshot.getChildren()) {
-                    Articles article = articleSnapshot.getValue(Articles.class);
-                    if(article.getIsFav().equals("true"))
+        if(databaseReference != null) {
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot articleSnapshot : dataSnapshot.getChildren()) {
+                        Articles article = articleSnapshot.getValue(Articles.class);
+                        Log.i("Test", "article: " + article);
                         retrievedList.add(article);
+                    }
+
+                    Log.i("Test", "article: " + retrievedList.size());
+                    getNewsLocallyList().postValue(retrievedList);
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-        getAllFavNews().postValue(retrievedList);
+                }
+            });
+        }
+    }
+
+    public void retrieveFavNews() {
+        ArrayList<Articles> retrievedList = new ArrayList<>();
+        if(databaseReference != null) {
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot articleSnapshot : dataSnapshot.getChildren()) {
+                        Articles article = articleSnapshot.getValue(Articles.class);
+                        if(article.getIsFav().equals("true"))
+                            retrievedList.add(article);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            getAllFavNews().postValue(retrievedList);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.anuja.trendingnews.app.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -9,25 +10,27 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.anuja.trendingnews.R;
 import com.example.anuja.trendingnews.WidgetService;
 import com.example.anuja.trendingnews.app.activities.NewsDetailsActivity;
 import com.example.anuja.trendingnews.app.adapters.NewsAdapter;
+import com.example.anuja.trendingnews.databinding.FragmentNewsBinding;
 import com.example.anuja.trendingnews.model.Articles;
 import com.example.anuja.trendingnews.viewmodel.MainViewModel;
 
-public class NewsFragment extends Fragment implements NewsAdapter.ListItemClickListener {
+public class NewsFragment extends BaseFragment implements NewsAdapter.ListItemClickListener {
     public static final String KEY_ARTICLE = "article_key";
 
     private MainViewModel mainViewModel;
-    private RecyclerView mRecyclerView;
     private NewsAdapter mNewsAdapter;
 
-    private Parcelable listState = null;
+    private FragmentNewsBinding mBinding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,23 +39,39 @@ public class NewsFragment extends Fragment implements NewsAdapter.ListItemClickL
 
         // get the viewmodel
         mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-
-        retrieveAllNews(); // should be called in the onConnected method
+        mainViewModel.initializingFirbase();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_news, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_news, container, false);
+        View view = mBinding.getRoot();
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mRecyclerView = view.findViewById(R.id.rv_all_news);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mBinding.rvAllNews.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mNewsAdapter = new NewsAdapter(null, this);
-        mRecyclerView.setAdapter(mNewsAdapter);
+        mBinding.rvAllNews.setAdapter(mNewsAdapter);
+        mBinding.pbList.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onConnected() {
+        retrieveAllNews();
+    }
+
+    @Override
+    protected void onDisconnected() {
+        mainViewModel.retrieveLocally();
+        mainViewModel.getNewsLocallyList().observe(this, allNews -> {
+            Log.i("Test", "allNews: locally: " + allNews.size());
+            mNewsAdapter.swapLists(allNews);
+            WidgetService.startActionToUpdateNews(getContext(), allNews);
+        });
     }
 
     /**
@@ -64,6 +83,7 @@ public class NewsFragment extends Fragment implements NewsAdapter.ListItemClickL
             mNewsAdapter.swapLists(allNews);
             WidgetService.startActionToUpdateNews(getContext(), allNews);
         });
+        mBinding.pbList.setVisibility(View.GONE);
     }
 
     @Override
