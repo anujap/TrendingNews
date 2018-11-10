@@ -2,6 +2,7 @@ package com.example.anuja.trendingnews.app.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,30 +13,27 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.anuja.trendingnews.R;
 import com.example.anuja.trendingnews.app.fragments.AboutUsFragment;
 import com.example.anuja.trendingnews.app.fragments.NewsFragment;
 import com.example.anuja.trendingnews.app.fragments.FavoritesFragment;
+import com.example.anuja.trendingnews.databinding.ActivityMainBinding;
+import com.example.anuja.trendingnews.databinding.NavHeaderBinding;
 import com.example.anuja.trendingnews.model.MainModel;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -59,24 +57,22 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser mFirebaseUser = null;
     private String username;
     private Uri userPhotoUri;
-    private ImageView ivUserDisplayPhoto;
 
-    private Toolbar mToolbar;
     private ActionBar mActionBar;
 
-    // navigation
     private ActionBarDrawerToggle toggle;
-    private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
-    private TextView tvNavigationHeaderUserName;
-
     private Fragment fragment = null;
     private MainModel mainModel;
+
+    private ActivityMainBinding mBinding;
+    private NavHeaderBinding mNavHeaderBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mNavHeaderBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.nav_header, mBinding.navView, false);
+        mBinding.navView.addHeaderView(mNavHeaderBinding.getRoot());
 
         initializeModel(savedInstanceState);
         initiateFirebaseAuthentication();
@@ -149,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     private void onSignedIn(String user, Uri userPhotoUri) {
         this.username = user;
         this.userPhotoUri = userPhotoUri;
-
+        Log.i("Test", "user signed in");
         initializeToolbar();
         initializeNavigationDrawer();
     }
@@ -165,22 +161,19 @@ public class MainActivity extends AppCompatActivity {
      * function used to create navigation drawer
      */
     private void initializeNavigationDrawer() {
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        mNavigationView = findViewById(R.id.nav_view);
-        tvNavigationHeaderUserName = findViewById(R.id.tv_user_name);
-        ivUserDisplayPhoto = findViewById(R.id.img_user_photo);
+        Log.i("Test", "initialize navigationview: " + mNavHeaderBinding.tvUserName);
 
         setUsernameDetails();
         performDrawerToggle();
 
-        mNavigationView.setCheckedItem(mainModel.getSelectedPosition());
+        mBinding.navView.setCheckedItem(mainModel.getSelectedPosition());
         displaySelectedFragment();
 
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mBinding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
+                mBinding.drawerLayout.closeDrawers();
 
                 mainModel.setSelectedPosition(menuItem.getItemId());
                 mainModel.setSelectedPositionTitle(menuItem.getTitle().toString());
@@ -194,7 +187,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUsernameDetails() {
         if(!TextUtils.isEmpty(username)) {
-            tvNavigationHeaderUserName.setText(username);
+            Log.i("Test", "navigationheader: " + mNavHeaderBinding.tvUserName + "      " + username);
+            mNavHeaderBinding.tvUserName.setText(username);
         }
 
         if(userPhotoUri != null)
@@ -211,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                     getContentResolver().openFileDescriptor(selectedFileUri, "r");
             FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
             Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-            ivUserDisplayPhoto.setImageBitmap(image);
+            mNavHeaderBinding.imgUserPhoto.setImageBitmap(image);
 
             parcelFileDescriptor.close();
         } catch (IOException e) {
@@ -223,9 +217,9 @@ public class MainActivity extends AppCompatActivity {
      * function used to perform the actionbar drawer toggle
      */
     private void performDrawerToggle() {
-        toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
+        toggle = new ActionBarDrawerToggle(this, mBinding.drawerLayout, mBinding.toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
-        mDrawerLayout.addDrawerListener(toggle);
+        mBinding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
@@ -234,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
      * item selected from the navigation drawer
      */
     private void displaySelectedFragment() {
-        mNavigationView.setCheckedItem(mainModel.getSelectedPosition());
+        mBinding.navView.setCheckedItem(mainModel.getSelectedPosition());
         mActionBar.setTitle(mainModel.getSelectedPositionTitle());
 
         int menuItemId = mainModel.getSelectedPosition();
@@ -263,8 +257,7 @@ public class MainActivity extends AppCompatActivity {
      * function to initialize the toolbar
      */
     private void initializeToolbar() {
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(mBinding.toolbar);
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -281,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                mBinding.drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.menu_signout:
                 AuthUI.getInstance().signOut(this);

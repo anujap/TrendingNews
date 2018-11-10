@@ -11,13 +11,13 @@
         </menu>
     </item>
 
-    <group android:checkableBehavior="none">
+    <group android:checkableBehavior="single">
         <item android:title="@string/str_favorites_menu"
             android:id="@+id/menu_favorites"
             android:icon="@drawable/ic_favorites"/>
     </group>
 
-    <group android:checkableBehavior="none">
+    <group android:checkableBehavior="single">
         <item android:title="@string/str_aboutus_menu"
             android:id="@+id/menu_about_us"
             android:icon="@drawable/ic_bookmark"/>
