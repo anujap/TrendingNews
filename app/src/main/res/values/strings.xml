@@ -2,31 +2,16 @@
     <string name="app_name">TrendingNews</string>
 
     <string name="str_newsstand_menu">Newsstand</string>
-    <string name="str_categories">News Categories</string>
     <string name="str_all_news">All News</string>
     <string name="str_favorites_menu">Favorites</string>
-    <string name="str_comments_menu">Comments</string>
+    <string name="str_aboutus_menu">About Us</string>
 
-    <string name="str_business">Business</string>
-    <string name="str_entertainment">Entertainment</string>
-    <string name="str_general">General</string>
-    <string name="str_health">Health</string>
-    <string name="str_science">Science</string>
-    <string name="str_sports">Sports</string>
-    <string name="str_technology">Technology</string>
-
-    <string name="str_settings_menu">Settings</string>
     <string name="str_signout_menu">SignOut</string>
-
-    <string name="str_headlines">Headlines</string>
-    <string name="str_popular">Popular</string>
 
     <string name="navigation_drawer_open">Open Navigation Drawer</string>
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
 
     <string name="str_news_image_thumbnail">News Thumbnail Image</string>
-    <string name="str_news_category">News Category</string>
-
     <string name="str_full_coverage">Full Coverage</string>
 
     <string name="str_description">Description: </string>
@@ -40,6 +25,12 @@
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="str_next">Next</string>
-    <string name="str_previous">Previous</string>
+
+    <string name="aboutus">Get Headlines!!!! Know whats happening around you</string>
+    <string name="poweredby">Powered By: NewsAPI.org</string>
+
+    <string name="str_news_liked">News Liked</string>
+    <string name="str_news_disliked">News Disliked</string>
+
+    <string name="str_unable_share">Unable to share</string>
 </resources>

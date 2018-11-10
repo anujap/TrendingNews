@@ -42,7 +42,7 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<List<Articles>> newsByCategoryList;
     private MutableLiveData<List<Articles>> allFavNews;
 
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
+    private DatabaseReference databaseReference;
 
     private ArrayList<Articles> storedNewsArticlesList = new ArrayList<>();;
 
@@ -90,6 +90,8 @@ public class MainViewModel extends ViewModel {
      * function called to insert the data into the database
      */
     private ArrayList<Articles> insertAndRetrieveFromDatabase(List<Articles> newsArticlesList) {
+        databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
+        databaseReference.keepSynced(true);
         for (Articles article : newsArticlesList) {
             String id = databaseReference.push().getKey();
             article.setArticleId(id);
@@ -103,8 +105,9 @@ public class MainViewModel extends ViewModel {
     }
 
     public void retrieveFavNews() {
+
         ArrayList<Articles> retrievedList = new ArrayList<>();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -120,29 +123,6 @@ public class MainViewModel extends ViewModel {
 
             }
         });
-
-    }
-
-    /**
-     * function used to download the news based on category
-     */
-    public void displayNewsByCategory(String categoryName) {
-        if(newsByCategoryList == null) {
-            mWebserviceInterface.getNewsByCategory(NewsUtils.ENDPOINT_NEWS_TOP_HEADLINES, NewsUtils.COUNTRY_PARAM_VALUE
-                                                    , categoryName, NewsUtils.API_KEY).enqueue(new Callback<NewsModel>() {
-                @Override
-                public void onResponse(Call<NewsModel> call, Response<NewsModel> response) {
-                    if(response.isSuccessful()) {
-                        List<Articles> newsArticlesList = response.body().getArticlesArrayList();
-                        if(newsArticlesList != null && newsArticlesList.size() > 0)
-                            getNewsByCategoryList().postValue(newsArticlesList);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<NewsModel> call, Throwable t) {
-                }
-            });
-        }
+        getAllFavNews().postValue(retrievedList);
     }
 }

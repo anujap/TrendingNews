@@ -8,11 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -61,12 +63,16 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
     private Snackbar snackbar;
 
     private boolean isFavorite = false;
+    private DatabaseReference dbReference;
 
-    //private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_news_details);
+
+        dbReference = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
+        dbReference.keepSynced(true);
+
         setUpActionBar();
         retrieveIntent();
         initializeFAB();
@@ -81,6 +87,10 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
         actionBar.setDisplayShowTitleEnabled(false);
         startAlphaAnimation(mBinding.tvToolbarTitle, 0, View.INVISIBLE);
         mBinding.appbar.addOnOffsetChangedListener(this);
+
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -189,7 +199,6 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
         mBinding.fabFavorite.setOnClickListener(this);
         mBinding.fabLaunch.setOnClickListener(this);
         mBinding.fabShare.setOnClickListener(this);
-        mBinding.fabComment.setOnClickListener(this);
 
         retrieveNewsFavorite();
     }
@@ -203,12 +212,10 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
 
             mBinding.fabLaunch.startAnimation(fab_close);
             mBinding.fabFavorite.startAnimation(fab_close);
-            mBinding.fabComment.startAnimation(fab_close);
             mBinding.fabShare.startAnimation(fab_close);
 
             mBinding.fabLaunch.setClickable(false);
             mBinding.fabFavorite.setClickable(false);
-            mBinding.fabComment.setClickable(false);
             mBinding.fabShare.setClickable(false);
 
             isFabOpen = false;
@@ -218,12 +225,10 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
 
             mBinding.fabLaunch.startAnimation(fab_open);
             mBinding.fabFavorite.startAnimation(fab_open);
-            mBinding.fabComment.startAnimation(fab_open);
             mBinding.fabShare.startAnimation(fab_open);
 
             mBinding.fabLaunch.setClickable(true);
             mBinding.fabFavorite.setClickable(true);
-            mBinding.fabComment.setClickable(true);
             mBinding.fabShare.setClickable(true);
 
             isFabOpen = true;
@@ -236,8 +241,6 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
         switch (id){
             case R.id.fab:
                 animateFAB();
-                break;
-            case R.id.fab_comment:
                 break;
             case R.id.fab_share:
                 shareNews();
@@ -268,8 +271,7 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void retrieveNewsFavorite() {
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME);
-        DatabaseReference dbRefKey = dbRef.child(mArticle.getArticleId());
+        DatabaseReference dbRefKey = dbReference.child(mArticle.getArticleId());
         DatabaseReference dbRefChild = dbRefKey.child("isFav");
         dbRefChild.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -290,16 +292,16 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
      * function called to update the liked news to the database
      */
     private void updateNewsToDatabase() {
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(DB_REFERENCE_CHILD_NAME).child(mArticle.getArticleId());
+        DatabaseReference dbRef = dbReference.child(mArticle.getArticleId());
         if(isFavorite) {
             isFavorite = false;
             mArticle.setIsFav("false");
-            Toast.makeText(this, "News DisLiked", Toast.LENGTH_SHORT).show();
+            showSnackbar(R.string.str_news_disliked);
         }
         else {
             isFavorite = true;
             mArticle.setIsFav("true");
-            Toast.makeText(this, "News Liked", Toast.LENGTH_SHORT).show();
+            showSnackbar(R.string.str_news_liked);
         }
         dbRef.setValue(mArticle);
         toggleFavUI();
@@ -317,7 +319,7 @@ public class NewsDetailsActivity extends AppCompatActivity implements View.OnCli
             startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.str_send_to)));
         }
         else {
-
+            showSnackbar(R.string.str_unable_share);
         }
     }
 

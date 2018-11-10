@@ -28,14 +28,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.anuja.trendingnews.R;
+import com.example.anuja.trendingnews.app.fragments.AboutUsFragment;
 import com.example.anuja.trendingnews.app.fragments.NewsFragment;
-import com.example.anuja.trendingnews.app.fragments.CategoriesFragment;
-import com.example.anuja.trendingnews.app.fragments.CommentsFragment;
 import com.example.anuja.trendingnews.app.fragments.FavoritesFragment;
 import com.example.anuja.trendingnews.model.MainModel;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private Uri userPhotoUri;
     private ImageView ivUserDisplayPhoto;
 
-    Toolbar mToolbar;
+    private Toolbar mToolbar;
+    private ActionBar mActionBar;
 
     // navigation
     private ActionBarDrawerToggle toggle;
@@ -233,21 +234,19 @@ public class MainActivity extends AppCompatActivity {
      * item selected from the navigation drawer
      */
     private void displaySelectedFragment() {
-        setTitle(mainModel.getSelectedPositionTitle());
+        mNavigationView.setCheckedItem(mainModel.getSelectedPosition());
+        mActionBar.setTitle(mainModel.getSelectedPositionTitle());
 
         int menuItemId = mainModel.getSelectedPosition();
         switch(menuItemId) {
-            case R.id.menu_categories:
-                fragment = new CategoriesFragment();
-                break;
             case R.id.menu_all_news:
                 fragment = new NewsFragment();
                 break;
             case R.id.menu_favorites:
                 fragment = new FavoritesFragment();
                 break;
-            case R.id.menu_comments:
-                fragment = new CommentsFragment();
+            case R.id.menu_about_us:
+                fragment = new AboutUsFragment();
                 break;
             default:
                 break;
@@ -266,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeToolbar() {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        ActionBar mActionBar = getSupportActionBar();
+        mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
     }
@@ -283,8 +282,6 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.menu_settings:
                 return true;
             case R.id.menu_signout:
                 AuthUI.getInstance().signOut(this);
